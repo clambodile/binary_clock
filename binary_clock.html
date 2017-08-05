@@ -1,0 +1,42 @@
+<canvas id="bin_clock" height="400" width="800"></canvas>
+
+<script>
+  window.onload = function() {
+    clock = document.getElementById('bin_clock')
+    ctx = clock.getContext("2d")
+    setInterval(tick,1000)
+    gridWidth = clock.width / 8 //twenty tiles high, forty across
+    gridHeight = clock.height / 2
+  }
+
+  // const pixelSize = 
+
+  function tick() {
+    const now = new Date()
+    const units = [now.getHours(), now.getMinutes(), now.getSeconds()]
+    const secondsInDay = units.reduce((total, unit )=> total * 60 + unit, 0)
+    const binarySeconds = secondsInDay.toString(2).padStart(24, '0').split('')
+
+    // console.log(binarySeconds.join(''));
+    draw(binarySeconds)
+  }
+
+  function draw(binarySeconds) {
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, clock.width, clock.height);
+    //17 bits
+    //each row 9 bits
+    //x = 8 - i % 9
+    //y equals Math.floor(i / 9)
+    binarySeconds.reverse().forEach(function(bit, i) {
+      const x = 8 - i % 9
+      const y = Math.floor(i / 9)
+      if (bit === '1') {
+        ctx.fillStyle = "lime";
+      } else {
+        ctx.fillStyle = "gray";
+      }
+      ctx.fillRect(x * gridWidth, y * gridHeight, gridWidth - 2, gridHeight - 2)
+    })
+  }
+</script>
